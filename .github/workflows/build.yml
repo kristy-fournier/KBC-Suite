@@ -1,0 +1,19 @@
+#Gemini wrote this for me, thank you gem
+name: KBC Build Check
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Compile KBC
+        run: make  # This runs the Makefile you just wrote!
+
+      - name: Test with Valgrind
+        run: |
+          sudo apt-get install valgrind
+          valgrind --error-exitcode=1 ./file.out input_args...
