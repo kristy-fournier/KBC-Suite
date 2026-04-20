@@ -1,9 +1,10 @@
 #include "kbc.h"
+#include "kh.h"
 #include "helpers.h"
 #include <stdio.h>
 #include <string.h>
 
-int main(int argc, char *argv[]) {
+int old_main(int argc, char *argv[]) {
     char* msg = 0;
     char* keyin = 0;
     direction direction = MODE_ENC;
@@ -80,4 +81,20 @@ int main(int argc, char *argv[]) {
         printHex(outMsg,length);
     }
     return 0;
+}
+
+int main() {
+    unsigned long long i = 0;
+    while(1) {
+        unsigned short result = kbc_hash((unsigned char*)&i,8);
+        if (result == 32000) {
+            printf("Found hash %04X at i=%d\n",result,i);
+            return 0;
+        }
+        i++;
+        if(i == 0) {
+            return 1;
+        }
+    }
+    return 1;
 }

@@ -29,8 +29,8 @@ kh.o: kh.c kh.h
 file.out: kbc.o file.o helpers.o
 	gcc ${CXXFLAGS} -o file.out kbc.o helpers.o file.o
 
-cipher.out: kbc.o tester.o helpers.o
-	gcc ${CXXFLAGS} -o cipher.out kbc.o tester.o helpers.o
+cipher.out: kbc.o tester.o helpers.o kh.o
+	gcc ${CXXFLAGS} -o cipher.out kbc.o tester.o helpers.o kh.o
 
 clean:
 	rm -rf *.out *.o
