@@ -40,6 +40,8 @@ int ecb(unsigned char messageIn[], unsigned char messageOut[], unsigned short k,
             result = dec(temp,k);
         } else if (mode == MODE_ENC) {
             result = enc(temp,k);
+        } else {
+            return 1;
         }
         messageOut[i] = result>>8;
         if(i!=byteCount){
@@ -69,6 +71,8 @@ int cbc(unsigned char messageIn[], unsigned char messageOut[], unsigned short k,
             result = dec(temp,k);
         } else if (mode == MODE_ENC) {
             result = enc(temp,k);
+        } else {
+            return 1;
         }
         if (mode == MODE_DEC) {
             if (i == 0) {

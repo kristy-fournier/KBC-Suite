@@ -24,6 +24,7 @@ unsigned short rotate_right(unsigned short value, unsigned int count) {
 // end gemini wrote
 
 int hexToCharArr(char hex[], unsigned char dataOut[], long length2) {
+    (void)length2; // will remove this at some point, just avoiding a warning for now
     long length = strlen(hex);
     if(length%2 != 0) {
         return -1;

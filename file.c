@@ -11,11 +11,7 @@ int main(int argc, char* argv[]) {
     unsigned short IV;
     direction dir;
     mode encMode;
-    if(argc<5) {
-        printf("Wrong Arguments\n");
-        printf("{exe} {fileIn} {dec|enc} {cbc|ctr|ecb} {fileOut} {key} {IV - Optional}\n");
-        return 1;
-    } else if (argc >= 6) {
+    if (argc >= 6) {
         fileName = argv[1];
         fileNameOut = argv[4];
         unsigned char* keyData = (unsigned char*) malloc(sizeof(char)*2);
@@ -41,6 +37,10 @@ int main(int argc, char* argv[]) {
         } else {
             IV = 0xB0F0;
         }
+    } else {
+        printf("Wrong Arguments\n");
+        printf("{exe} {fileIn} {dec|enc} {cbc|ctr|ecb} {fileOut} {key} {IV - Optional}\n");
+        return 1;
     }
     FILE *fptr = fopen(fileName, "rb");
     if (fptr == NULL) return 1;
