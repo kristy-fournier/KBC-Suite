@@ -23,11 +23,14 @@ kbc.o: kbc.c kbc.h
 tester.o: tester.c
 	gcc ${CXXFLAGS} -c tester.c
 
+kh.o: kh.c kh.h
+	gcc ${CXXFLAGS} -c kh.c
+
 file.out: kbc.o file.o helpers.o
-	gcc ${CXXFLAGS} -o file.out kes.o helpers.o file.o
+	gcc ${CXXFLAGS} -o file.out kbc.o helpers.o file.o
 
 cipher.out: kbc.o tester.o helpers.o
-	gcc ${CXXFLAGS} -o cipher.out kes.o tester.o helpers.o
+	gcc ${CXXFLAGS} -o cipher.out kbc.o tester.o helpers.o
 
 clean:
 	rm -rf *.out *.o
