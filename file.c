@@ -21,6 +21,7 @@ int main(int argc, char* argv[]) {
         unsigned char* keyData = (unsigned char*) malloc(sizeof(char)*2);
         hexToCharArr(argv[5],keyData,4);
         key = *(unsigned short*)keyData;
+        free(keyData);
         if(argv[2][0] == 'd') {
             dir = MODE_DEC;
         } else {
@@ -78,6 +79,8 @@ int main(int argc, char* argv[]) {
     fclose(fptrout);
     
     printf("Output to file %s of size %ld\n",fileNameOut,lengthWrite);
+
+    free(buffer);
 
     return 0;
 }

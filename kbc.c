@@ -30,9 +30,9 @@ unsigned short dec(unsigned short c, unsigned short k) {
 }
 
 int ecb(unsigned char messageIn[], unsigned char messageOut[], unsigned short k, unsigned char mode, long long byteCount) {
-    for(long long i = 0; i<=byteCount;i+=2) {
+    for(long long i = 0; i<byteCount;i+=2) {
         unsigned short temp = (messageIn[i]<<8);
-        if(i!=byteCount) {
+        if(i!=byteCount-1) {
             temp = temp | messageIn[i+1];
         }
         unsigned short result;
@@ -52,9 +52,9 @@ int ecb(unsigned char messageIn[], unsigned char messageOut[], unsigned short k,
 
 int cbc(unsigned char messageIn[], unsigned char messageOut[], unsigned short k, unsigned char mode, long long byteCount, unsigned short IV) {
     // unsigned short IV = 1234;
-    for(long long i = 0; i<=byteCount;i+=2) {
+    for(long long i = 0; i<byteCount;i+=2) {
         unsigned short temp = (messageIn[i]<<8);
-        if(i!=byteCount) {
+        if(i!=byteCount-1) {
             temp = temp | messageIn[i+1];
         }
         if (mode == MODE_ENC) {
@@ -89,9 +89,9 @@ int cbc(unsigned char messageIn[], unsigned char messageOut[], unsigned short k,
 int ctr(unsigned char messageIn[], unsigned char messageOut[], unsigned short k, unsigned char mode, long long byteCount, unsigned char nonce) {
     (void)mode; // Avoids a compiler warning about not using.
     unsigned short counter = nonce << 8;
-    for(long long i = 0; i<=byteCount;i+=2) {
+    for(long long i = 0; i<byteCount;i+=2) {
         unsigned short temp = (messageIn[i]<<8);
-        if(i<byteCount) {
+        if(i!=byteCount-1) {
             temp = temp | messageIn[i+1];
         }
         unsigned short result;
