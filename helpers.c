@@ -1,6 +1,8 @@
 #include "helpers.h"
 #include <stdio.h>
 #include <string.h>
+
+// gemini wrote
 unsigned char hexToNibble(char c) {
     if (c >= '0' && c <= '9') return c - '0';
     if (c >= 'a' && c <= 'f') return c - 'a' + 10;
@@ -8,6 +10,18 @@ unsigned char hexToNibble(char c) {
     return 0; // Error handling usually goes here
 }
 
+unsigned short rotate_left(unsigned short value, unsigned int count) {
+    // Mask count to avoid undefined behavior if count >= 16
+    count %= 16; 
+    return (value << count) | (value >> (16 - count));
+}
+
+unsigned short rotate_right(unsigned short value, unsigned int count) {
+    count %= 16;
+    return (value >> count) | (value << (16 - count));
+}
+
+// end gemini wrote
 
 int hexToCharArr(char hex[], unsigned char dataOut[], long length2) {
     long length = strlen(hex);

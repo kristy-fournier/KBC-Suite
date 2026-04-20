@@ -2,21 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "kbc.h"
-
-// gemini wrote
-
-uint16_t rotate_left(uint16_t value, uint32_t count) {
-    // Mask count to avoid undefined behavior if count >= 16
-    count %= 16; 
-    return (value << count) | (value >> (16 - count));
-}
-
-uint16_t rotate_right(uint16_t value, uint32_t count) {
-    count %= 16;
-    return (value >> count) | (value << (16 - count));
-}
-
-// end gemini wrote
+#include "helpers.h"
 
 unsigned short enc(unsigned short m, unsigned short k) {
     unsigned short multiplier = k * 9 ^ 0b10110100;
