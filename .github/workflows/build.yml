@@ -16,7 +16,8 @@ jobs:
       - name: Test with Valgrind
         run: |
           sudo apt-get install valgrind
-          valgrind --error-exitcode=1 ./file.out ./kbc.c enc cbc ./kbc.c.bin "AAAA" "BBBB"
+          valgrind --error-exitcode=1 ./file-kbc.out ./kbc.c enc cbc ./kbc.c.bin "AAAA" "BBBB"
+          valgrind ./file-kh.out ./kbc.c
       
       - name: Encrypt-Decrypt Test (KBC Test)
         run: |
