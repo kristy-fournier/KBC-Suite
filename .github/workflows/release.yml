@@ -22,7 +22,7 @@ jobs:
         # Adjust this gcc command if your build step is different!
         run: |
           sudo apt-get install mingw-w64
-          make build
+          make build DEBUG=0
           
       - name: Create GitHub Release and Upload Binary
         uses: softprops/action-gh-release@v2
