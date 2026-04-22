@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
     size_t result = fread(buffer, 1, fileSize, fptr);
     printf("Read in original file %s of size %ld\n",fileName,result);
     fclose(fptr);
-    unsigned char out[fileSize];
+    unsigned char* out = malloc(sizeof(char)*fileSize);
     switch(encMode) {
         case ECB:
             ecb(buffer,out,key,dir,fileSize);
@@ -71,6 +71,7 @@ int main(int argc, char* argv[]) {
             ctr(buffer,out,key,dir,fileSize,IV);
             break;
     }
+    free(buffer);
     
     
     FILE *fptrout = fopen(fileNameOut, "wb");
@@ -79,8 +80,7 @@ int main(int argc, char* argv[]) {
     fclose(fptrout);
     
     printf("Output to file %s of size %ld\n",fileNameOut,lengthWrite);
-
-    free(buffer);
+    free(out);
 
     return 0;
 }

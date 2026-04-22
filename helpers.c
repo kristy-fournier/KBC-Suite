@@ -10,16 +10,16 @@ unsigned char hexToNibble(char c) {
     return 0; // Error handling usually goes here
 }
 
-unsigned short rotate_left(unsigned short value, unsigned int count) {
-    // Mask count to avoid undefined behavior if count >= 16
-    count %= 16; 
-    return (value << count) | (value >> (16 - count));
-}
+// unsigned short rotate_left(unsigned short value, unsigned int count) {
+//     // Mask count to avoid undefined behavior if count >= 16
+//     count %= 16; 
+//     return (value << count) | (value >> (16 - count));
+// }
 
-unsigned short rotate_right(unsigned short value, unsigned int count) {
-    count %= 16;
-    return (value >> count) | (value << (16 - count));
-}
+// unsigned short rotate_right(unsigned short value, unsigned int count) {
+//     count %= 16;
+//     return (value >> count) | (value << (16 - count));
+// }
 
 // end gemini wrote
 
@@ -43,4 +43,11 @@ void printHex(unsigned char data[],long long length) {
         printf("%02X",data[i]);
     }
     printf("\n");
+}
+
+void kbc_headerPrint(KBCHeader* headerIn) {
+    printf("HeaderType: %.*s\n",4,headerIn->magic);
+    printf("FileExt:    %.*s\n",8,headerIn->extension);
+    printf("IV:         %04X\n",headerIn->iv);
+    printf("Length:     %lld\n",headerIn->fileSize);
 }

@@ -17,11 +17,11 @@ file-kbc.o: file-kbc.c
 helpers.o: helpers.c helpers.h
 	gcc ${CXXFLAGS} -c helpers.c
 
-kbc.o: kbc.c kbc.h
-	gcc ${CXXFLAGS} -c kbc.c
+kbc.o: kbc.c kbc.h helpers.h
+	gcc ${CXXFLAGS} -c kbc.c helpers.h
 
-tester.o: tester.c
-	gcc ${CXXFLAGS} -c tester.c
+tester.o: tester.c helpers.h
+	gcc ${CXXFLAGS} -c tester.c helpers.h
 
 kh.o: kh.c kh.h
 	gcc ${CXXFLAGS} -c kh.c
@@ -39,4 +39,4 @@ cipher.out: kbc.o tester.o helpers.o kh.o
 	gcc ${CXXFLAGS} -o cipher.out kbc.o tester.o helpers.o kh.o
 
 clean:
-	rm -rf *.out *.o
+	rm -rf *.out *.o *.h.gch

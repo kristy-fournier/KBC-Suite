@@ -2,10 +2,26 @@
 #define KES_HELPERS_H
 
 // safely bit-rotate a short by count to the left
-unsigned short rotate_left(unsigned short value, unsigned int count);
-
+static inline unsigned short rotate_left(unsigned short value, unsigned int count) {
+    count &= 0xF; // Faster way to do % 16
+    return (value << count) | (value >> (16 - count));
+}
 // safely bit-rotate a short by count to the right
-unsigned short rotate_right(unsigned short value, unsigned int count);
+static inline unsigned short rotate_right(unsigned short value, unsigned int count) {
+    count &= 0xF; // Faster way to do % 16
+    return (value >> count) | (value << (16 - count));
+}
+
+#pragma pack(push,1)
+typedef struct {
+    char magic[4];               // "KBCx" where x is version num
+    char extension[8];           // ".xyz\0\0\0\0" | Original extension including '.' | allows up to 7 chars of extension
+    unsigned short iv;           // The IV used for CBC, or first byte for CTR
+    unsigned long long fileSize; // Original size before padding
+} KBCHeader;
+#pragma pack(pop)
+
+void kbc_headerPrint(KBCHeader* headerIn);
 
 // convert hex char (0-9,A-F) to equivelant byte (0-15)
 unsigned char hexToNibble(char c);
