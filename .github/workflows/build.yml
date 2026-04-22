@@ -23,4 +23,7 @@ jobs:
           chmod +x test-bc.sh
           ./test-bc.sh
 
-      
+      - name: Hash Test (KH Test)
+        run: |
+          chmod +x test-h.sh
+          ./test-h.sh
