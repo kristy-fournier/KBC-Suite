@@ -32,11 +32,17 @@ file-kh.o: file-kh.c
 file-kh.out: kh.o file-kh.o helpers.o
 	gcc ${CXXFLAGS} -o file-kh.out kh.o file-kh.o helpers.o
 
-file-kbc.out: kbc.o file-kbc.o helpers.o
-	gcc ${CXXFLAGS} -o file-kbc.out kbc.o helpers.o file-kbc.o
+file-kbc.out: kbc.o file-kbc.o helpers.o kh.o
+	gcc ${CXXFLAGS} -o file-kbc.out kbc.o helpers.o file-kbc.o kh.o
+
+file-kbc.exe: helpers.c helpers.h kbc.c kh.c file-kbc.c
+	x86_64-w64-mingw32-gcc ${CXXFLAGS} -o file-kbc.exe helpers.c helpers.h kbc.c kh.c file-kbc.c
 
 cipher.out: kbc.o tester.o helpers.o kh.o
 	gcc ${CXXFLAGS} -o cipher.out kbc.o tester.o helpers.o kh.o
 
 clean:
-	rm -rf *.out *.o *.h.gch
+	rm -rf *.out *.o *.h.gch *.exe
+
+cleanall: clean
+	rm -rf vgcore.* *.kbc

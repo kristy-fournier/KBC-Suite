@@ -102,5 +102,12 @@ int main() {
     // }
     fclose(x);
     free(y);
+    KBCHeader testHeader;
+    strncpy(testHeader.tag,"KBC1",4);
+    strncpy(testHeader.extension,".TXT\0",5);
+    testHeader.fileSize = 15;
+    testHeader.iv = 0xFF15;
+    printf("%ld\n",sizeof(testHeader));
+    kbc_headerPrint(&testHeader);
     return 0;
 }

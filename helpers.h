@@ -1,6 +1,18 @@
 #ifndef KES_HELPERS_H
 #define KES_HELPERS_H
 
+// Const Defenitions
+#define MODE_ENC 0
+#define MODE_DEC 1
+
+typedef unsigned char direction;
+
+extern const char* modesLookup[];
+
+typedef enum mode: unsigned char {
+    ECB,CBC,CTR
+} mode;
+
 // safely bit-rotate a short by count to the left
 static inline unsigned short rotate_left(unsigned short value, unsigned int count) {
     count &= 0xF; // Faster way to do % 16
@@ -14,7 +26,9 @@ static inline unsigned short rotate_right(unsigned short value, unsigned int cou
 
 #pragma pack(push,1)
 typedef struct {
-    char magic[4];               // "KBCx" where x is version num
+    char tag[4];                 // "KBCx" where x is version num
+    unsigned char cipherMode;    // matching the above mode enum (ecb,cbc,ctr = 0,1,2)
+    unsigned short hash;         // hash of the data
     char extension[8];           // ".xyz\0\0\0\0" | Original extension including '.' | allows up to 7 chars of extension
     unsigned short iv;           // The IV used for CBC, or first byte for CTR
     unsigned long long fileSize; // Original size before padding

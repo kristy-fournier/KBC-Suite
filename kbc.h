@@ -1,16 +1,6 @@
 #ifndef BLOCKCIPHER_H
 #define BLOCKCIPHER_H
 
-// Const Defenitions
-#define MODE_ENC 0
-#define MODE_DEC 1
-
-typedef unsigned char direction;
-
-typedef enum mode {
-    ECB,CBC,CTR
-} mode;
-
 // Encrypt a single block
 unsigned short enc(unsigned short m, unsigned short k);
 

@@ -23,6 +23,8 @@ unsigned char hexToNibble(char c) {
 
 // end gemini wrote
 
+const char* modesLookup[] = {"ECB","CBC","CTR"};
+
 int hexToCharArr(char hex[], unsigned char dataOut[], long length2) {
     (void)length2; // will remove this at some point, just avoiding a warning for now
     long length = strlen(hex);
@@ -46,8 +48,9 @@ void printHex(unsigned char data[],long long length) {
 }
 
 void kbc_headerPrint(KBCHeader* headerIn) {
-    printf("HeaderType: %.*s\n",4,headerIn->magic);
+    printf("HeaderType: %.*s\n",4,headerIn->tag);
+    printf("Mode:       %s\n",modesLookup[headerIn->cipherMode]);
     printf("FileExt:    %.*s\n",8,headerIn->extension);
     printf("IV:         %04X\n",headerIn->iv);
-    printf("Length:     %lld\n",headerIn->fileSize);
+    printf("FileSize:   %lld\n",headerIn->fileSize);
 }
