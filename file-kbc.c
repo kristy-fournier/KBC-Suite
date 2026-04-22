@@ -66,8 +66,14 @@ int main(int argc, char* argv[]) {
     long fileSize = ftell(fptr);
     rewind(fptr); // Move pointer back to the start of the file
 
-    // 2. Allocate memory (+1 for the null terminator '\0')
-    unsigned char* buffer = (unsigned char *)malloc(sizeof(char) * (fileSize));
+    // 2. Allocate memory
+    unsigned char* buffer;
+    if (fileSize%2==0) {
+        buffer = (unsigned char *)malloc(sizeof(char) * (fileSize));
+    } else {
+        buffer = (unsigned char *)malloc(sizeof(char) * (fileSize+1));
+        buffer[fileSize] = 0;
+    }
     if (buffer == NULL) {
         fclose(fptr);
         return 1;
@@ -114,7 +120,7 @@ int main(int argc, char* argv[]) {
     if(dir == MODE_DEC || fileSize%2==0) {
         out = malloc(sizeof(char)*fileSize);
     } else {
-        out = malloc(sizeof(char)*++fileSize);
+        out = malloc(sizeof(char)*fileSize+1);
         out[fileSize] = 0;
     }
     switch(encMode) {

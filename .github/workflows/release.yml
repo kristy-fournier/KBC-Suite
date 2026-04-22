@@ -27,5 +27,9 @@ jobs:
       - name: Create GitHub Release and Upload Binary
         uses: softprops/action-gh-release@v2
         with:
-          files: file-kbc.out file-kh.out file-kbc.exe # The compiled binary to attach to the release
+          # The compiled binaries to attach to the release
+          files: |
+            file-kbc.out
+            file-kh.out 
+            file-kbc.exe 
           generate_release_notes: true # Auto-generates notes based on your commit messages
