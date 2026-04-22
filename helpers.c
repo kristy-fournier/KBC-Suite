@@ -10,17 +10,6 @@ unsigned char hexToNibble(char c) {
     return 0; // Error handling usually goes here
 }
 
-// unsigned short rotate_left(unsigned short value, unsigned int count) {
-//     // Mask count to avoid undefined behavior if count >= 16
-//     count %= 16; 
-//     return (value << count) | (value >> (16 - count));
-// }
-
-// unsigned short rotate_right(unsigned short value, unsigned int count) {
-//     count %= 16;
-//     return (value >> count) | (value << (16 - count));
-// }
-
 // end gemini wrote
 
 const char* modesLookup[] = {"ECB","CBC","CTR"};
