@@ -1,15 +1,17 @@
 DEBUG ?= 1
 ifeq ($(DEBUG), 1)
     CXXFLAGS = -g -Wall -Wextra -O0 
-    MODE_MSG = "Debug Mode"
+    MODE_MSG = Debug Mode
 else
     CXXFLAGS = -O3 -Wall -Wextra
-    MODE_MSG = "Release Mode"
+    MODE_MSG = Release Mode
 endif
 SOURCES  = file.c helpers.c kes.c tester.c
 OBJECTS  = $(SOURCES:.cpp=.o)
 
 all: cipher.out file-kbc.out file-kh.out
+
+build: file-kbc.out file-kh.out file-kbc.exe
 
 file-kbc.o: file-kbc.c
 	gcc ${CXXFLAGS} -c file-kbc.c

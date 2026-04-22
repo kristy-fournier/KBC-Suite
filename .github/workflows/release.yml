@@ -1,0 +1,30 @@
+name: Auto-Release KBC Suite
+
+# This tells GitHub to ONLY run this script when you push a tag that starts with "v" (like v1.0.0)
+on:
+  push:
+    tags:
+      - 'v*'
+
+# GitHub needs permission to write the release to your repo
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest # The server OS
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Compile the C Code
+        # Adjust this gcc command if your build step is different!
+        run: |
+          make build
+          
+      - name: Create GitHub Release and Upload Binary
+        uses: softprops/action-gh-release@v2
+        with:
+          files: file-kbc.out file-kh.out file-kbc.exe # The compiled binary to attach to the release
+          generate_release_notes: true # Auto-generates notes based on your commit messages
