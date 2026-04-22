@@ -9,10 +9,10 @@ endif
 SOURCES  = file.c helpers.c kes.c tester.c
 OBJECTS  = $(SOURCES:.cpp=.o)
 
-all: cipher.out file.out
+all: cipher.out file-kbc.out file-kh.out
 
-file.o: file.c
-	gcc ${CXXFLAGS} -c file.c
+file-kbc.o: file-kbc.c
+	gcc ${CXXFLAGS} -c file-kbc.c
 
 helpers.o: helpers.c helpers.h
 	gcc ${CXXFLAGS} -c helpers.c
@@ -26,8 +26,14 @@ tester.o: tester.c
 kh.o: kh.c kh.h
 	gcc ${CXXFLAGS} -c kh.c
 
-file.out: kbc.o file.o helpers.o
-	gcc ${CXXFLAGS} -o file.out kbc.o helpers.o file.o
+file-kh.o: file-kh.c
+	gcc ${CXXFLAGS} -c file-kh.c
+
+file-kh.out: kh.o file-kh.o helpers.o
+	gcc ${CXXFLAGS} -o file-kh.out kh.o file-kh.o helpers.o
+
+file-kbc.out: kbc.o file-kbc.o helpers.o
+	gcc ${CXXFLAGS} -o file-kbc.out kbc.o helpers.o file-kbc.o
 
 cipher.out: kbc.o tester.o helpers.o kh.o
 	gcc ${CXXFLAGS} -o cipher.out kbc.o tester.o helpers.o kh.o

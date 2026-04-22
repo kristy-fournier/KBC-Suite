@@ -5,7 +5,7 @@
 #include "helpers.h"
 
 unsigned short enc(unsigned short m, unsigned short k) {
-    unsigned short multiplier = k * 9 ^ 0b10110100;
+    unsigned short multiplier = (k * 9 ^ 0b10110100) % 16;
     for (int i = (multiplier)-1;i>=0;i--) {
         m = rotate_left(m,i+9);
         m = m ^ k;
@@ -17,7 +17,7 @@ unsigned short enc(unsigned short m, unsigned short k) {
 }
 
 unsigned short dec(unsigned short c, unsigned short k) {
-    unsigned short multiplier = k * 9 ^ 0b10110100;
+    unsigned short multiplier = (k * 9 ^ 0b10110100) % 16;
     c = c ^ 0b1010101010101010;
     for (int i = 0;i<(multiplier);i++) {
         c = c ^ rotate_right(k,i);

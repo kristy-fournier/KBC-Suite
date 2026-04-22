@@ -82,19 +82,25 @@ int old_main(int argc, char *argv[]) {
     }
     return 0;
 }
-
+#include <stdlib.h>
 int main() {
-    unsigned long long i = 0;
-    while(1) {
-        unsigned short result = kbc_hash((unsigned char*)&i,8);
-        if (result == 32000) {
-            printf("Found hash %04X at i=%d\n",result,i);
-            return 0;
-        }
-        i++;
-        if(i == 0) {
-            return 1;
-        }
-    }
-    return 1;
+    FILE* x = fopen("README.md","rb");
+    unsigned char* y = malloc(sizeof(char)*101);
+    fread(y,1,100,x);
+    unsigned short hash = kbc_hash(y,100);
+    printHex((unsigned char*)&hash,2);
+    // while(1) {
+    //     unsigned short result = kbc_hash((unsigned char*)&i,8);
+    //     if (result == 32000) {
+    //         printf("Found hash %04X at i=%lld\n",result,i);
+    //         return 0;
+    //     }
+    //     i++;
+    //     if(i == 0) {
+    //         return 1;
+    //     }
+    // }
+    fclose(x);
+    free(y);
+    return 0;
 }
