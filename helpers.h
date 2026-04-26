@@ -10,7 +10,7 @@ typedef unsigned char direction;
 extern const char* modesLookup[];
 
 typedef enum mode: unsigned char {
-    ECB,CBC,CTR
+    ECB,CBC,CTR,NONE
 } mode;
 
 // safely bit-rotate a short by count to the left

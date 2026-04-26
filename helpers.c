@@ -39,6 +39,7 @@ void printHex(unsigned char data[],long long length) {
 void kbc_headerPrint(KBCHeader* headerIn) {
     printf("HeaderType: %.*s\n",4,headerIn->tag);
     printf("Mode:       %s\n",modesLookup[headerIn->cipherMode]);
+    printf("CipherHash: %04X\n",headerIn->hash);
     printf("FileExt:    %.*s\n",8,headerIn->extension);
     printf("IV:         %04X\n",headerIn->iv);
     printf("FileSize:   %lld\n",headerIn->fileSize);
