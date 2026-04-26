@@ -21,3 +21,11 @@ The input and output arrays should be the same size, and divisible by 2.
 
 ## kh.c (Unfinished)
 Hash function, not yet complete
+
+## Table for understanding header versions
+
+KBC binary headers use a format to identify themselves in the first 4 bytes. In chars, the first 4 bytes should always be in the format of `KBCx`. If for some reason at any point more than 9 numbers are needed, `KCxx` might be used. I will attempt to explain it here
+
+|Header | Version |
+|-------|---------|
+|`KBC1` | v3.x.x  |
