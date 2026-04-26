@@ -4,64 +4,114 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <getopt.h>
+#include <stdbool.h>
 
 int main(int argc, char* argv[]) {
-    char* fileName;
-    char* fileNameOut;
+    char* fileName = NULL;
+    char* fileNameOut = NULL;
+    bool keySet = false;
     unsigned short key;
+    bool IVSet = false;
     unsigned short IV;
-    direction dir;
-    mode encMode;
-    if (argc >= 6 && argv[2][0] == 'e') {
-        fileName = argv[1];
-        fileNameOut = argv[4];
-        unsigned char* keyData = (unsigned char*) malloc(sizeof(char)*2);
-        hexToCharArr(argv[3],keyData,4);
-        key = keyData[0]<<8 | keyData[1];
-        free(keyData);
-        if(argv[2][0] == 'd') {
-            dir = MODE_DEC;
-        } else {
-            dir = MODE_ENC;
+    direction dir = 2;
+    mode encMode = NONE;
+
+    // replacing old args system
+    static struct option long_options[] = {
+        {"in",      required_argument, 0, 'i'},
+        {"out",     required_argument, 0, 'o'},
+        {"key",     required_argument, 0, 'k'},
+        {"iv",      required_argument, 0, 'v'},
+        {"mode",    required_argument, 0, 'm'}, // ecb,cbc,ctr
+        {"encrypt",       no_argument, 0, 'e'},
+        {"decrypt",       no_argument, 0, 'd'},
+        {"help",          no_argument, 0, 'h'},
+        {0, 0, 0, 0}
+    };
+
+    int opt;
+    while ((opt = getopt_long(argc, argv, "i:o:k:v:m:edh", long_options, NULL)) != -1) {
+        switch(opt){
+            case 'i':
+                fileName = optarg;
+                break;
+            case 'o':
+                fileNameOut = optarg;
+                break;
+            case 'k':
+                unsigned char keyData[2];
+                hexToCharArr(optarg,keyData,4);
+                key = keyData[0]<<8 | keyData[1];
+                keySet = true;
+                break;
+            case 'v':
+                IV = optarg[0]<<8 | optarg[1];
+                IVSet = true;
+                break;
+            case 'm':
+                if(strcmp(optarg,"ecb")==0) {
+                    encMode = ECB;
+                } else if (strcmp(optarg,"cbc")==0) {
+                    encMode = CBC;
+                } else if (strcmp(optarg,"ctr")==0) {
+                    encMode = CTR;
+                } else {
+                    return 1;
+                }
+                break;
+            case 'e':
+                dir = MODE_ENC;
+                break;
+            case 'd':
+                dir = MODE_DEC;
+                break;
+            case 'h':
+                printf("{exe} {-e/-d} -k {keyInHex} -v {IV} -i {inFile} -o {outFile} -m {ecb|cbc|ctr}\n");
+                printf("- - - - - - -\n");
+                printf("Usage:\n");
+                printf("--in | -i : (REQUIRED) Provided with a file to show the intended file to encrypt\n");
+                printf("\n");
+                return 0;
         }
-        if(strcmp(argv[5],"ecb")==0) {
-            encMode = ECB;
-        } else if (strcmp(argv[5],"cbc")==0) {
-            encMode = CBC;
-        } else if (strcmp(argv[5],"ctr")==0) {
-            encMode = CTR;
-        } else {
-            return 1;
-        }
-        if(argc >=7) {
-            IV = *(unsigned short*)argv[6];
-        } else {
-            IV = 0xB0F0;
-        }
-    } else if (argc==5) {
-        fileName = argv[1];
-        fileNameOut = argv[4];
-        dir = MODE_DEC;
-        unsigned char keyData[2] = {0};
-        hexToCharArr(argv[3],keyData,4);
-        key = keyData[0]<<8 | keyData[1];
-    } else if (argc > 2){
-        if ((argv[2][0] == 'd')) {
-            printf("Wrong Arguments\n");
-            printf("{exe} {fileIn} {dec} {key} {fileOut}\n");
-        } else {
-            printf("Wrong Arguments\n");
-            printf("{exe} {fileIn} {enc} {key} {fileOut} {cbc|ctr|ecb} {IV - Optional}\n");
-        }
-        return 1;
-    } else {
-        printf("Wrong Arguments, for more help run:\n");
-        printf("{exe} {fileIn} {dec|enc}\n");
+    }
+
+    // checking all data is set correctly from args
+
+    // Basically anything directly wrong
+    if (fileName == NULL || !keySet || dir == 2) {
+        printf("Bad args, run --help for more info\n");
         return 1;
     }
-    FILE *fptr = fopen(fileName, "rb");
-    if (fptr == NULL) return 1;
 
+    if (dir == MODE_ENC && encMode == NONE) {
+        printf("Bad args, run --help for more info\n");
+        return 1;
+    }
+    
+    // Set a generic output file
+    if (fileNameOut == NULL) {
+        if(dir == MODE_ENC) {
+            fileNameOut = "out.kbc";
+        } else {
+            // Otherwise we'll set it later
+            // for now this is an error
+            printf("Give an output file (with -o)\n");
+            return 1;
+        }
+    }
+
+    if(!IVSet) {
+        IV = 0xB0F0;
+    }
+
+    // new args over (for now)
+
+    FILE *fptr = fopen(fileName, "rb");
+    if (fptr == NULL) {
+        printf("File Not Found Error\n");
+        return 1;
+    }
     fseek(fptr, 0, SEEK_END);
     long fileSize = ftell(fptr);
     rewind(fptr); // Move pointer back to the start of the file
@@ -100,7 +150,11 @@ int main(int argc, char* argv[]) {
             printf("\033[1;31mERROR\033[1;0m:Bad Block Cipher Version Number, try again\n");
             return 1;
         }
-        if(kbc_hash(buffer,(header.fileSize%2==1) ? header.fileSize +1 : header.fileSize)!=header.hash) {
+        unsigned short inHash;
+        inHash = kbc_hash(buffer,header.fileSize);
+        if(inHash!=header.hash) {
+            printf("Hash Found: %04X\n",inHash);
+            printf("Hash Seek:  %04X\n",header.hash);
             printf("\033[1;31mERROR\033[1;0m: Hashes do not match, Data may be corrupted\n");
             return 1;
         }
@@ -111,7 +165,6 @@ int main(int argc, char* argv[]) {
         IV = header.iv;
         // fileNameOut = malloc(sizeof(char)*sizeof(argv[3]));
         encMode = header.cipherMode;
-
     }
 
     printf("Read in original file %s of size %ld\n",fileName,result);
@@ -135,6 +188,9 @@ int main(int argc, char* argv[]) {
         case CTR:
             ctr(buffer,out,key,dir,fileSize,IV);
             break;
+        case NONE:
+            printf("What?\n");
+            return 1;
     }
     if(dir == MODE_DEC) {
         free(buffer-sizeof(KBCHeader));
@@ -142,8 +198,9 @@ int main(int argc, char* argv[]) {
         free(buffer);
         header.hash = kbc_hash(out,fileSize);
     }
-    
-    
+    if (dir == MODE_ENC) {
+        kbc_headerPrint(&header);
+    }
     FILE *fptrout = fopen(fileNameOut, "wb");
     if (fptrout == NULL) return 1;
     size_t lengthWrite = 0;
