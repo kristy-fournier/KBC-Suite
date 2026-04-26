@@ -62,6 +62,9 @@ int old_main(int argc, char *argv[]) {
             case CTR:
                 ctr(data,outMsg,key,MODE_DEC,length,IV);
                 break;
+            case NONE:
+                printf("What?\n");
+                return 1;
         }
         outMsg[length] = '\0';
         printf("Decrypt: %s\n",outMsg);
@@ -76,6 +79,9 @@ int old_main(int argc, char *argv[]) {
             case CTR:
                 ctr((unsigned char*)msg,outMsg,key,MODE_ENC,length,IV);
                 break;
+            case NONE:
+                printf("What?\n");
+                return 1;
         }
         printf("Encrypted Data: ");
         printHex(outMsg,length);
@@ -102,9 +108,9 @@ int main() {
     // }
     fclose(x);
     free(y);
-    KBCHeader testHeader;
-    strncpy(testHeader.tag,"KBC1",4);
-    strncpy(testHeader.extension,".TXT\0",5);
+    KBCHeader testHeader = {.extension = {0}};
+    memcpy(testHeader.tag,"KBC1",4);
+    memcpy(testHeader.extension,".TXT\0",5);
     testHeader.fileSize = 15;
     testHeader.iv = 0xFF15;
     printf("%ld\n",sizeof(testHeader));
