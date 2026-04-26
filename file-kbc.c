@@ -97,11 +97,11 @@ int main(int argc, char* argv[]) {
         buffer = buffer + sizeof(KBCHeader);
         kbc_headerPrint(&header);
         if(memcmp(header.tag,"KBC1",4)!= 0) {
-            printf("Bad Block Cipher Version Number, try again\n");
+            printf("\033[1;31mERROR\033[1;0m:Bad Block Cipher Version Number, try again\n");
             return 1;
         }
         if(kbc_hash(buffer,(header.fileSize%2==1) ? header.fileSize +1 : header.fileSize)!=header.hash) {
-            printf("Data was corrupted\n");
+            printf("\033[1;31mERROR\033[1;0m: Hashes do not match, Data may be corrupted\n");
             return 1;
         }
         if(strcmp(strrchr(fileNameOut, '.'),header.extension)!=0) {
