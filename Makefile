@@ -11,7 +11,7 @@ OBJECTS  = $(SOURCES:.cpp=.o)
 
 all: cipher.out file-kbc.out file-kh.out
 
-build: file-kbc.out file-kh.out file-kbc.exe
+build: file-kbc.out file-kh.out file-kbc.exe file-kh.exe
 
 file-kbc.o: file-kbc.c
 	gcc ${CXXFLAGS} -c file-kbc.c
@@ -35,7 +35,7 @@ file-kh.out: kh.o file-kh.o helpers.o
 	gcc ${CXXFLAGS} -o file-kh.out kh.o file-kh.o helpers.o
 
 file-kh.exe: helpers.c helpers.h kh.c file-kh.c
-	x86_64-w64-mingw32-gcc ${CXXFLAGS} -o file-kh.exe
+	x86_64-w64-mingw32-gcc ${CXXFLAGS} -o file-kh.exe helpers.c helpers.h kh.c file-kh.c
 
 file-kbc.out: kbc.o file-kbc.o helpers.o kh.o
 	gcc ${CXXFLAGS} -o file-kbc.out kbc.o helpers.o file-kbc.o kh.o
