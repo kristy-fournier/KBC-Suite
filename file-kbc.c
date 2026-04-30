@@ -7,6 +7,8 @@
 #include <getopt.h>
 #include <stdbool.h>
 
+#define VER_STR "KBC2"
+
 int main(int argc, char* argv[]) {
     char* fileName = NULL;
     char* fileNameOut = NULL;
@@ -127,7 +129,7 @@ int main(int argc, char* argv[]) {
 
     size_t result = fread(buffer, 1, fileSize, fptr);
 
-    KBCHeader header={.tag="KBC1"};
+    KBCHeader header={.tag=VER_STR};
     if (dir == MODE_ENC) {
         // header creation
         char* ext = strrchr(fileName, '.');
@@ -142,7 +144,7 @@ int main(int argc, char* argv[]) {
         memcpy(&header, buffer, sizeof(KBCHeader));
         buffer = buffer + sizeof(KBCHeader);
         kbc_headerPrint(&header);
-        if(memcmp(header.tag,"KBC1",4)!= 0) {
+        if(memcmp(header.tag,VER_STR,4)!= 0) {
             printf("\033[1;31mERROR\033[1;0m:Bad Block Cipher Version Number, try again\n");
             return 1;
         }

@@ -28,4 +28,5 @@ KBC binary headers use a format to identify themselves in the first 4 bytes. In 
 
 |Header | Version |
 |-------|---------|
-|`KBC1` | v3.x.x (expected v4.x.x)  |
+|`KBC1` | v3.x.x  |
+|`KBC2` | v4.x.x  |
