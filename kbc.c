@@ -119,4 +119,4 @@ void testSingleBlock(char* msg) {
     printf("Original Plaintext: %X\n",plaintext);
     printf("Encrypted: %X\n",enc_out);
     printf("New Plain: %X\n",plain2);
-} 
+}

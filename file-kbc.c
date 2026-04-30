@@ -114,16 +114,12 @@ int main(int argc, char* argv[]) {
     }
     fseek(fptr, 0, SEEK_END);
     long fileSize = ftell(fptr);
+    long paddedSize = fileSize%2==0 ? fileSize : fileSize + 1;
     rewind(fptr); // Move pointer back to the start of the file
 
     // 2. Allocate memory
-    unsigned char* buffer;
-    if (fileSize%2==0) {
-        buffer = (unsigned char *)malloc(sizeof(char) * (fileSize));
-    } else {
-        buffer = (unsigned char *)malloc(sizeof(char) * (fileSize+1));
-        buffer[fileSize] = 0;
-    }
+    unsigned char* buffer = (unsigned char *)malloc(sizeof(char) * (paddedSize));
+    buffer[paddedSize-1] = 0;
     if (buffer == NULL) {
         fclose(fptr);
         return 1;
@@ -162,6 +158,7 @@ int main(int argc, char* argv[]) {
             printf("\033[1;31mWARNING\033[1;0m: file extension in header does not match given output file, proceeding anyway\n");
         }
         fileSize = header.fileSize;
+        paddedSize = (header.fileSize%2)==0 ? header.fileSize : header.fileSize +1;
         IV = header.iv;
         // fileNameOut = malloc(sizeof(char)*sizeof(argv[3]));
         encMode = header.cipherMode;
@@ -169,24 +166,19 @@ int main(int argc, char* argv[]) {
 
     printf("Read in original file %s of size %ld\n",fileName,result);
     fclose(fptr);
-    unsigned char* out;
-    if(dir == MODE_DEC || fileSize%2==0) {
-        out = malloc(sizeof(char)*fileSize);
-    } else {
-        out = malloc(sizeof(char)*fileSize+1);
-        out[fileSize] = 0;
-    }
+    unsigned char* out = malloc(sizeof(char)*paddedSize);
+    out[paddedSize-1] = 0;
     switch(encMode) {
         // unsigned char* bufferNew = buffer + sizeof(KBCHeader);
         // long fileSizeNew = fileSize - sizeof(KBCHeader);
         case ECB:
-            ecb(buffer,out,key,dir,fileSize);
+            ecb(buffer,out,key,dir,paddedSize);
             break;
         case CBC:
-            cbc(buffer,out,key,dir,fileSize,IV);
+            cbc(buffer,out,key,dir,paddedSize,IV);
             break;
         case CTR:
-            ctr(buffer,out,key,dir,fileSize,IV);
+            ctr(buffer,out,key,dir,paddedSize,IV);
             break;
         case NONE:
             printf("What?\n");
@@ -206,8 +198,10 @@ int main(int argc, char* argv[]) {
     size_t lengthWrite = 0;
     if (dir == MODE_ENC) {
         lengthWrite += fwrite((unsigned char*)&header,1,sizeof(header),fptrout);
+        lengthWrite += fwrite(out,1,paddedSize,fptrout);
+    } else {
+        lengthWrite += fwrite(out,1,header.fileSize,fptrout);
     }
-    lengthWrite += fwrite(out,1,fileSize,fptrout);
     fclose(fptrout);
     
     printf("Output to file %s of size %ld\n",fileNameOut,lengthWrite);

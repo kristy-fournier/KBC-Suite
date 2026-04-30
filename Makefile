@@ -34,6 +34,9 @@ file-kh.o: file-kh.c
 file-kh.out: kh.o file-kh.o helpers.o
 	gcc ${CXXFLAGS} -o file-kh.out kh.o file-kh.o helpers.o
 
+file-kh.exe: helpers.c helpers.h kh.c file-kh.c
+	x86_64-w64-mingw32-gcc ${CXXFLAGS} -o file-kh.exe
+
 file-kbc.out: kbc.o file-kbc.o helpers.o kh.o
 	gcc ${CXXFLAGS} -o file-kbc.out kbc.o helpers.o file-kbc.o kh.o
 

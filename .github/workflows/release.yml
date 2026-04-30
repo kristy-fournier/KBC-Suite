@@ -32,4 +32,5 @@ jobs:
             file-kbc.out
             file-kh.out 
             file-kbc.exe 
+            file-kh.exe
           generate_release_notes: true # Auto-generates notes based on your commit messages
