@@ -9,8 +9,8 @@ NC='\033[0m' # No Color
 make clean
 make DEBUG=0
 echo "This is a top secret message for KBC!" > original.txt
-./file-kbc.out ./original.txt enc "AAAA" ./middle.kbc cbc "BBBB"
-./file-kbc.out ./middle.kbc dec "AAAA" ./decrypt.txt
+./file-kbc.out -i ./original.txt -e -k "AAAA" -o ./middle.kbc -m cbc -v "BBBB"
+./file-kbc.out ./middle.kbc -d -k "AAAA" -i middle.kbc -o ./decrypt.txt
 
 ORIG_HASH=$(sha256sum original.txt | awk '{ print $1 }')
 DECR_HASH=$(sha256sum decrypt.txt | awk '{ print $1 }')

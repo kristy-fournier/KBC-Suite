@@ -2,12 +2,12 @@
 
 ## Usage and building
 
-- Run `make` or `make build`\
+- Run `make` or `make build`
 ### file-kbc
-Encrypt a file using the mode and key you like
-`./file-kbc.out [filein] [enc|dec] [key] [fileout] [cbc|ctr|ecb] [iv]`\
+Encrypt a file using the mode and key you like\
+`./file-kbc.out [-e/-d] -i [filein] -k [hexKey] -o [fileout] -m [cbc|ctr|ecb] -v [ivstring]`\
 In the above the `key` is 4 hex digits including leading 0s. Ex: `0012` `F023` `aaaa` are valid keys\
-The `iv` isn't super useful in the current version, it gets the raw bytes of the string and casts to a short or a char.
+The `iv` isn't super useful in the current version, it gets the raw bytes of the string and casts to a short or a char. IV must be at least 4 digits 
 
 ### file-kh
 Hash a file
