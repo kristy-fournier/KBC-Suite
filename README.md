@@ -26,7 +26,7 @@ Hash function, not yet complete
 
 KBC binary headers use a format to identify themselves in the first 4 bytes. In chars, the first 4 bytes should always be in the format of `KBCx`. If for some reason at any point more than 9 numbers are needed, `KCxx` might be used. I will attempt to explain it here
 
-|Header | Version |
-|-------|---------|
-|`KBC1` | v3.x.x  |
-|`KBC2` | v4.x.x  |
+|Header | Version |Notes|
+|-------|---------|------|
+|`KBC1` | 3.x.x  | 3.x.x versions may have issues recovering the last byte of encrypted files|
+|`KBC2` | 4.x.x  |        |
